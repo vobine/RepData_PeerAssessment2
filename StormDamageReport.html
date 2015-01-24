@@ -76,56 +76,71 @@ img {
 <div id="load-data-set" class="section level2">
 <h2>Load data set</h2>
 <pre class="r"><code>storms &lt;- read.csv ('StormData.csv.bz2')</code></pre>
+<p>Convert damage exponents to numeric values.</p>
+<pre class="r"><code>allExponents &lt;- union (levels (storms$CROPDMGEXP),
+                       levels (storms$PROPDMGEXP))
+numex &lt;- as.numeric (allExponents)</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>numex[allExponents %in% c('h', 'H')] &lt;- 2
+numex[allExponents %in% c('k', 'K')] &lt;- 3
+numex[allExponents %in% c('m', 'M')] &lt;- 6
+numex[allExponents %in% c('b', 'B')] &lt;- 9
+numex[allExponents %in% c('', '?', '-', '+')] &lt;- 0
+stopifnot (! any (is.na (numex)))
+numex &lt;- 10 ^ numex
+numex</code></pre>
+<pre><code>##  [1] 1e+00 1e+00 1e+00 1e+02 1e+09 1e+03 1e+03 1e+06 1e+06 1e+00 1e+00
+## [12] 1e+01 1e+03 1e+04 1e+05 1e+06 1e+07 1e+08 1e+02 1e+02</code></pre>
 <p>Categories gleaned from NOAA, plus some tools for cleaning the raw data:</p>
-<pre class="r"><code>stormTypes &lt;- c (
-  'Astronomical Low Tide',
-                'Avalanche',
-                'Blizzard',
-                'Coastal Flood',
-                'Cold/Wind Chill',
-                'Debris Flow',
-                'Dense Fog',
-                'Dense Smoke',
-                'Drought',
-                'Dust Devil',
-                'Dust Storm',
-                'Excessive Heat',
-                'Extreme Cold/Wind Chill',
-                'Flash Flood',
-                'Flood',
-                'Freezing Fog',
-                'Frost/Freeze',
-                'Funnel Cloud',
-                'Hail',
-                'Heat',
-                'Heavy Rain',
-                'Heavy Snow',
-                'High Surf',
-                'High Wind',
-                'Hurricane/Typhoon',
-                'Ice Storm',
-                'Lakeshore Flood',
-                'Lake-Effect Snow',
-                'Lightning',
-                'Marine Hail',
-                'Marine High Wind',
-                'Marine Strong Wind',
-                'Marine Thunderstorm Wind',
-                'Rip Current',
-                'Seiche',
-                'Sleet',
-                'Storm Tide',
-                'Strong Wind',
-                'Thunderstorm Wind',
-                'Tornado',
-                'Tropical Depression',
-                'Tropical Storm',
-                'Tsunami',
-                'Volcanic Ash',
-                'Waterspout',
-                'Wildfire',
-                'Winter Storm',
-                'Winter Weather' )</code></pre>
+<pre class="r"><code>stormTypes &lt;- c ('Astronomical Low Tide',
+                 'Avalanche',
+                 'Blizzard',
+                 'Coastal Flood',
+                 'Cold/Wind Chill',
+                 'Debris Flow',
+                 'Dense Fog',
+                 'Dense Smoke',
+                 'Drought',
+                 'Dust Devil',
+                 'Dust Storm',
+                 'Excessive Heat',
+                 'Extreme Cold/Wind Chill',
+                 'Flash Flood',
+                 'Flood',
+                 'Freezing Fog',
+                 'Frost/Freeze',
+                 'Funnel Cloud',
+                 'Hail',
+                 'Heat',
+                 'Heavy Rain',
+                 'Heavy Snow',
+                 'High Surf',
+                 'High Wind',
+                 'Hurricane/Typhoon',
+                 'Ice Storm',
+                 'Lakeshore Flood',
+                 'Lake-Effect Snow',
+                 'Lightning',
+                 'Marine Hail',
+                 'Marine High Wind',
+                 'Marine Strong Wind',
+                 'Marine Thunderstorm Wind',
+                 'Rip Current',
+                 'Seiche',
+                 'Sleet',
+                 'Storm Tide',
+                 'Strong Wind',
+                 'Thunderstorm Wind',
+                 'Tornado',
+                 'Tropical Depression',
+                 'Tropical Storm',
+                 'Tsunami',
+                 'Volcanic Ash',
+                 'Waterspout',
+                 'Wildfire',
+                 'Winter Storm',
+                 'Winter Weather' )</code></pre>
+<p>Of the 37 variables, not all are relevant to the analysis at hand.</p>
 </div>
 </div>
 <div id="results" class="section level1">

@@ -17,6 +17,23 @@ output: html_document
 storms <- read.csv ('StormData.csv.bz2')
 ```
 
+Convert damage exponents to numeric values.
+
+```{r}
+allExponents <- union (levels (storms$CROPDMGEXP),
+                       levels (storms$PROPDMGEXP))
+numex <- as.numeric (allExponents)
+numex[allExponents %in% c('h', 'H')] <- 2
+numex[allExponents %in% c('k', 'K')] <- 3
+numex[allExponents %in% c('m', 'M')] <- 6
+numex[allExponents %in% c('b', 'B')] <- 9
+numex[allExponents %in% c('', '?', '-', '+')] <- 0
+stopifnot (! any (is.na (numex)))
+numex <- 10 ^ numex
+numex
+```
+
+
 Categories gleaned from NOAA, plus some tools for cleaning the raw data:
 
 ```{r}
@@ -70,6 +87,8 @@ stormTypes <- c ('Astronomical Low Tide',
                  'Winter Weather' )
 
 ```
+
+Of the 37 variables, not all are relevant to the analysis at hand.
 
 
 # Results
