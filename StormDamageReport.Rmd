@@ -215,3 +215,20 @@ From the raw data we have generated three new useful variables:
  - `human`, the number of casualties from each event.
 
 # Results
+
+From the processed data we compute total costs for each official type of event.
+
+```{r echo=TRUE, cache=TRUE}
+library (plyr)
+moneyEvents <- ddply (storms, 
+                      .(official), 
+                      summarize, 
+                      money=sum (money, na.rm=TRUE))
+
+humanEvents <- ddply (storms,
+                      .(official),
+                      summarize,
+                      human=sum (human, na.rm=TRUE))
+```
+
+Summed this way, total casualties were `r sum (moneyEvents$money)` and costs were `r sum (humanEvents$human)`.

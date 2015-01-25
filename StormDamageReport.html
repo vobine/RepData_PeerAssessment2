@@ -224,9 +224,25 @@ for (evt in levels (storms$EVTYPE)) {
 <pre class="r"><code>storms$official &lt;- toOfficial[storms$EVTYPE]</code></pre>
 <p>The regular expression trick converted 99.3579719 percent of the raw events.</p>
 </div>
+<div id="data-processing-summary" class="section level2">
+<h2>Data processing summary</h2>
+<p>From the raw data we have generated three new useful variables: - <code>official</code>, the NOAA classification of each event; - <code>money</code>, the monetary cost of each event; and - <code>human</code>, the number of casualties from each event.</p>
+</div>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
+<p>From the processed data we compute total costs for each official type of event.</p>
+<pre class="r"><code>library (plyr)
+moneyEvents &lt;- ddply (storms, 
+                      .(official), 
+                      summarize, 
+                      money=sum (money, na.rm=TRUE))
+
+humanEvents &lt;- ddply (storms,
+                      .(official),
+                      summarize,
+                      human=sum (human, na.rm=TRUE))</code></pre>
+<p>Summed this way, total casualties were 1.145142910^{14} and costs were 1.5567310^{5}.</p>
 </div>
 
 
