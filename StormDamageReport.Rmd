@@ -18,19 +18,32 @@ storms <- read.csv ('StormData.csv.bz2')
 ```
 
 Convert damage exponents to numeric values.
+For the first step we ignore R warnings, because we expect them: not every EXP level is a string representing a number.
 
-```{r}
+```{r warning=FALSE}
 allExponents <- union (levels (storms$CROPDMGEXP),
                        levels (storms$PROPDMGEXP))
 numex <- as.numeric (allExponents)
+```
+```{r}
 numex[allExponents %in% c('h', 'H')] <- 2
 numex[allExponents %in% c('k', 'K')] <- 3
 numex[allExponents %in% c('m', 'M')] <- 6
 numex[allExponents %in% c('b', 'B')] <- 9
 numex[allExponents %in% c('', '?', '-', '+')] <- 0
-stopifnot (! any (is.na (numex)))
 numex <- 10 ^ numex
-numex
+```
+
+Do not trust the enumeration conversion: complain bitterly if it missed any *EXP codes.
+Otherwise, display the values (because it doesn't hurt).
+
+```{r}
+if (any (is.na (numex))) {
+  print (allExponents[is.na (numex)])
+  stop ('INPUT ERROR: unknown values of CROPDMGEXP and/or PROPDMGEXP')
+} else {
+  unique (numex)
+}
 ```
 
 
@@ -87,8 +100,6 @@ stormTypes <- c ('Astronomical Low Tide',
                  'Winter Weather' )
 
 ```
-
-Of the 37 variables, not all are relevant to the analysis at hand.
 
 
 # Results
