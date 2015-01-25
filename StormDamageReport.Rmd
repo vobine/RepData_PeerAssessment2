@@ -277,8 +277,11 @@ text (cex=0.8,
       srt=0,
       adj=0,
       col='blue')
+
+worst <- tail (humanOrder, 1)
 ```
 
+Tornadoes are clearly the greatest weather threat to humans, accounting for `r humanEvents$human[worst] * 100.0 / sum (humanEvents$human, na.rm=TRUE)` percent of total casualties.
 
 ```{r echo=TRUE, fig.width=5, fig.height=8}
 moneyOrder <- order (moneyEvents$money)
