@@ -15,13 +15,13 @@ Acquire data, load into R, and prepare it for analysis.
 
 ## Load data set
 
-```{r cache=TRUE}
+```{r echo=TRUE, cache=TRUE}
 storms <- read.csv ('StormData.csv.bz2')
 ```
 
 Compute human harm as injuries plus fatalities.
 
-```{r cache=TRUE}
+```{r echo=TRUE, cache=TRUE}
 storms$human <- storms$FATALITIES + storms$INJURIES
 human <- sum (storms$human)
 ```
@@ -34,12 +34,12 @@ Monetary damage estimates are stored in two columns, a significand and an expone
 For analysis we must convert damage exponents to numeric values.
 (For the first step we ignore R warnings, because we expect them: not every EXP level is a string representing a number.)
 
-```{r warning=FALSE}
+```{r echo=TRUE, warning=FALSE}
 allExponents <- union (levels (storms$CROPDMGEXP),
                        levels (storms$PROPDMGEXP))
 numex <- as.numeric (allExponents)
 ```
-```{r}
+```{r echo=TRUE}
 numex[allExponents %in% c('h', 'H')] <- 2
 numex[allExponents %in% c('k', 'K')] <- 3
 numex[allExponents %in% c('m', 'M')] <- 6
@@ -51,7 +51,7 @@ numex <- 10 ^ numex
 Complain if enumeration conversion missed any *EXP codes.
 Otherwise, display exponent values (because it doesn't hurt).
 
-```{r}
+```{r echo=TRUE}
 if (any (is.na (numex))) {
   print (allExponents[is.na (numex)])
   stop ('INPUT ERROR: unknown values of CROPDMGEXP and/or PROPDMGEXP')
@@ -62,7 +62,7 @@ if (any (is.na (numex))) {
 
 Now we have the tools to compute monetary damage estimates.
 
-```{r cache=TRUE}
+```{r echo=TRUE, cache=TRUE}
 storms$money <- storms$PROPDMG * numex[storms$PROPDMGEXP] +
   storms$CROPDMG * numex[storms$CROPDMGEXP]
 money <- sum (storms$money)
@@ -74,7 +74,7 @@ Total reported monetary damage is `r money`.
 
 Categories gleaned from NOAA, plus some tools for cleaning the raw data:
 
-```{r}
+```{r echo=TRUE}
 stormTypes <- c ('Astronomical Low Tide',
                  'Avalanche',
                  'Blizzard',
@@ -128,7 +128,7 @@ stormTypes <- c ('Astronomical Low Tide',
 
 Associate each official event type with a regular expression to match against actual EVTYPE values. These expressions were painstakingly based on the data, but changes to the data must make them obsolete, sooner or later.
 
-```{r}
+```{r echo=TRUE}
 stormMatch = c ('astro.*low',
                 'aval',
                 'bliz',
@@ -184,7 +184,7 @@ Pull the actual, messy values of EVTYPE from the data, and match them with offic
 The conversion tool, `toOfficial`, is an array of canonical event types, indexed by raw event type.
 
 
-```{r}
+```{r echo=TRUE}
 toOfficial <- factor (levels=stormTypes)
 for (evt in levels (storms$EVTYPE)) {
   toOfficial[evt] <- NA
@@ -201,7 +201,7 @@ The raw event types include `r sum (is.na (toOfficial))` values that do not matc
 
 Now for the actual conversion: code each event in the record with its official event type.
 
-```{r cache=TRUE}
+```{r echo=TRUE, cache=TRUE}
 storms$official <- toOfficial[storms$EVTYPE]
 ```
 
