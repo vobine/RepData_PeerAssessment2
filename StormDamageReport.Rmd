@@ -27,6 +27,13 @@ Monetarily, the worst events are, in decreasing order of cost:
 
 Acquire data, load into R, and prepare it for analysis.
 
+ - [Raw data from the Web](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2):
+retrieved January 2015, file dated February 2014.
+ - [Long description of data](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf):
+ retrieved January 2015, document dated August 2007.
+ - [FAQ on the data](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf):
+ retrieved January 2015, document dated August 2008.
+
 ## Load data set
 
 ```{r echo=TRUE, cache=TRUE}
