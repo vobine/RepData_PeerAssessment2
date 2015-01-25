@@ -143,6 +143,76 @@ numex &lt;- 10 ^ numex</code></pre>
                  'Wildfire',
                  'Winter Storm',
                  'Winter Weather' )</code></pre>
+<p>Associate each official event type with a regular expression to match against actual EVTYPE values. These expressions were painstakingly based on the data, but changes to the data must make them obsolete, sooner or later.</p>
+<pre class="r"><code>stormMatch = c ('astro.*low',
+                'aval',
+                'bliz',
+                'coast',
+                'cold|chill',
+                'flow|landslide',
+                'dense fog',
+                'dense smoke',
+                'drought',
+                'dev|landspout',
+                'dust.*storm',
+                '(exce|record).*heat',
+                'extreme cold|chill',
+                'flash',
+                'flood',
+                '(freez|ice).* fog',
+                'frost|freeze',
+                'funnel',
+                'hail',
+                'heat',
+                'rain',
+                'snow',
+                'surf',
+                'wind',
+                'typh|hurr',
+                'ice storm',
+                'lakeshore',
+                'lake.*effect',
+                'light[a-z]*ing',
+                'marine hail',
+                'marine high wind',
+                'marine strong wind',
+                'marine t.* wind',
+                'rip',
+                'seiche',
+                'sleet',
+                'storm.*tide',
+                'strong',
+                '(thun|tstm).*wind',
+                'torn',
+                'depre',
+                'trop.*storm',
+                'tsu',
+                'volc',
+                'spout',
+                'wild',
+                'winter.*storm',
+                'winter.*weather')</code></pre>
+<p>From the data pull the actual (messy!) values of EVTYPE, and match them with official event types.</p>
+<pre class="r"><code>toOfficial &lt;- factor (NA, levels=stormTypes)
+for (evt in levels (storms$EVTYPE)) {
+  for (i in 1 : length (stormTypes)) {
+    if (regexpr (stormMatch[i], evt, ignore.case=TRUE) &gt;= 0) {
+      toOfficial[evt] &lt;- stormTypes[i]
+      break
+    }
+  }
+}
+
+sum (is.na (toOfficial))</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>length (toOfficial)</code></pre>
+<pre><code>## [1] 711</code></pre>
+<pre class="r"><code>head (toOfficial)</code></pre>
+<pre><code>##                          HIGH SURF ADVISORY         COASTAL FLOOD 
+##                  &lt;NA&gt;             High Surf         Coastal Flood 
+##           FLASH FLOOD             LIGHTNING             TSTM WIND 
+##           Flash Flood             Lightning             High Wind 
+## 48 Levels: Astronomical Low Tide Avalanche Blizzard ... Winter Weather</code></pre>
 </div>
 </div>
 <div id="results" class="section level1">
