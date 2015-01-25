@@ -173,6 +173,14 @@ for (evt in levels (storms$EVTYPE)) {
 }
 ```
 
-The raw event types include `r sum (is.na (toOfficial))` values that aren't converted, mostly for unofficial events (daily summaries, etc.). For the present analysis we ignore those events.
+The raw event types include `r sum (is.na (toOfficial))` values that do not match any of the conversion expressions. Most of these entries describe unofficial events (daily summaries, etc.). For the present analysis we ignore those events.
+
+Now for the actual conversion: code each event in the record with its official event type.
+
+```{r cache=TRUE}
+storms$official <- toOfficial[storms$EVTYPE]
+```
+
+The regular expression trick converted `r 100.0 * (1.0 - sum (is.na (storms$official)) / nrow (storms))` percent of the raw events.
 
 # Results

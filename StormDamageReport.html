@@ -206,7 +206,10 @@ for (evt in levels (storms$EVTYPE)) {
     }
   }
 }</code></pre>
-<p>The raw event types include 262 values that aren’t converted, mostly for unofficial events (daily summaries, etc.). For the present analysis we ignore those events.</p>
+<p>The raw event types include 262 values that do not match any of the conversion expressions. Most of these entries describe unofficial events (daily summaries, etc.). For the present analysis we ignore those events.</p>
+<p>Now for the actual conversion: code each event in the record with its official event type.</p>
+<pre class="r"><code>storms$official &lt;- toOfficial[storms$EVTYPE]</code></pre>
+<p>The regular expression trick converted 99.3579719 percent of the raw events.</p>
 </div>
 </div>
 <div id="results" class="section level1">
