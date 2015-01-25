@@ -94,6 +94,9 @@ numex &lt;- 10 ^ numex</code></pre>
   unique (numex)
 }</code></pre>
 <pre><code>##  [1] 1e+00 1e+02 1e+09 1e+03 1e+06 1e+01 1e+04 1e+05 1e+07 1e+08</code></pre>
+</div>
+<div id="clean-up-event-types" class="section level2">
+<h2>Clean up event types</h2>
 <p>Categories gleaned from NOAA, plus some tools for cleaning the raw data:</p>
 <pre class="r"><code>stormTypes &lt;- c ('Astronomical Low Tide',
                  'Avalanche',
@@ -182,7 +185,7 @@ numex &lt;- 10 ^ numex</code></pre>
                 'sleet',
                 'storm.*tide',
                 'strong',
-                '(thun|tstm).*wind',
+                '(thun|tstm)',
                 'torn',
                 'depre',
                 'trop.*storm',
@@ -192,27 +195,18 @@ numex &lt;- 10 ^ numex</code></pre>
                 'wild',
                 'winter.*storm',
                 'winter.*weather')</code></pre>
-<p>From the data pull the actual (messy!) values of EVTYPE, and match them with official event types.</p>
-<pre class="r"><code>toOfficial &lt;- factor (NA, levels=stormTypes)
+<p>Pull the actual, messy values of EVTYPE from the data, and match them with official event types using the hand-crafted regular expressions defined above. The conversion tool, <code>toOfficial</code>, is an array of canonical event types, indexed by raw event type.</p>
+<pre class="r"><code>toOfficial &lt;- factor (levels=stormTypes)
 for (evt in levels (storms$EVTYPE)) {
+  toOfficial[evt] &lt;- NA
   for (i in 1 : length (stormTypes)) {
     if (regexpr (stormMatch[i], evt, ignore.case=TRUE) &gt;= 0) {
       toOfficial[evt] &lt;- stormTypes[i]
       break
     }
   }
-}
-
-sum (is.na (toOfficial))</code></pre>
-<pre><code>## [1] 1</code></pre>
-<pre class="r"><code>length (toOfficial)</code></pre>
-<pre><code>## [1] 711</code></pre>
-<pre class="r"><code>head (toOfficial)</code></pre>
-<pre><code>##                          HIGH SURF ADVISORY         COASTAL FLOOD 
-##                  &lt;NA&gt;             High Surf         Coastal Flood 
-##           FLASH FLOOD             LIGHTNING             TSTM WIND 
-##           Flash Flood             Lightning             High Wind 
-## 48 Levels: Astronomical Low Tide Avalanche Blizzard ... Winter Weather</code></pre>
+}</code></pre>
+<p>The raw event types include 262 values that aren’t converted, mostly for unofficial events (daily summaries, etc.). For the present analysis we ignore those events.</p>
 </div>
 </div>
 <div id="results" class="section level1">

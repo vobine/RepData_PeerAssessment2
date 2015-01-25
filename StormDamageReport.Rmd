@@ -46,6 +46,8 @@ if (any (is.na (numex))) {
 }
 ```
 
+## Clean up event types
+
 Categories gleaned from NOAA, plus some tools for cleaning the raw data:
 
 ```{r}
@@ -141,7 +143,7 @@ stormMatch = c ('astro.*low',
                 'sleet',
                 'storm.*tide',
                 'strong',
-                '(thun|tstm).*wind',
+                '(thun|tstm)',
                 'torn',
                 'depre',
                 'trop.*storm',
@@ -154,11 +156,14 @@ stormMatch = c ('astro.*low',
 ```
 
 
-From the data pull the actual (messy!) values of EVTYPE, and match them with official event types.
+Pull the actual, messy values of EVTYPE from the data, and match them with official event types using the hand-crafted regular expressions defined above.
+The conversion tool, `toOfficial`, is an array of canonical event types, indexed by raw event type.
+
 
 ```{r}
-toOfficial <- factor (NA, levels=stormTypes)
+toOfficial <- factor (levels=stormTypes)
 for (evt in levels (storms$EVTYPE)) {
+  toOfficial[evt] <- NA
   for (i in 1 : length (stormTypes)) {
     if (regexpr (stormMatch[i], evt, ignore.case=TRUE) >= 0) {
       toOfficial[evt] <- stormTypes[i]
@@ -166,11 +171,8 @@ for (evt in levels (storms$EVTYPE)) {
     }
   }
 }
-
-sum (is.na (toOfficial))
-length (toOfficial)
-head (toOfficial)
 ```
 
+The raw event types include `r sum (is.na (toOfficial))` values that aren't converted, mostly for unofficial events (daily summaries, etc.). For the present analysis we ignore those events.
 
 # Results
