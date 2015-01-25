@@ -298,5 +298,8 @@ text (cex=0.8,
       srt=0,
       adj=0,
       col='blue')
+
+worst <- tail (moneyOrder, 6)
 ```
 
+Monetary damages are less tightly distributed than casualties, but still the top `r length (worst)` most destructive event types account for `r sum (moneyEvents$money[worst]) * 100.0 / sum (moneyEvents$money, na.rm=TRUE)` percent of total costs.
