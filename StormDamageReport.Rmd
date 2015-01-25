@@ -231,4 +231,4 @@ humanEvents <- ddply (storms,
                       human=sum (human, na.rm=TRUE))
 ```
 
-Summed this way, total casualties were `r sum (moneyEvents$money)` and costs were `r sum (humanEvents$human)`.
+Summed this way, total casualties were `r sum (humanEvents$human)` and costs were `r sum (moneyEvents$money)`.
