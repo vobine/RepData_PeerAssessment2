@@ -235,7 +235,18 @@ Summed this way, total casualties were `r sum (humanEvents$human)` and costs wer
 
 ```{r echo=TRUE, fig.width=5, fig.height=8}
 moneyOrder <- order (moneyEvents$money)
-barplot (moneyEvents$money[moneyOrder],
-         horiz=TRUE)
+beepy <- barplot (moneyEvents$money[moneyOrder],
+                  horiz=TRUE,
+                  col='yellow',
+                  xlab='Total cost (nominal dollars)',
+                  ylab='Event type')
+text (cex=0.8,
+      y=beepy - 0,
+      x=-1.25,
+      as.character (moneyEvents$official[moneyOrder]),
+      xpd=TRUE,
+      srt=0,
+      adj=0,
+      col='blue')
 ```
 
