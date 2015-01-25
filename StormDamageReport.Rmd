@@ -12,7 +12,12 @@ We seek to identify the most dangerous classes of weather event.
 
 In human costs, the worst events are, in decreasing order of injuries and deaths:
 
-1. Something
+1. Tornado
+1. High Wind
+1. Excessive Heat
+1. Flood
+
+Tornadoes are the most dangerous event to humans by a wide margin.
 
 Monetarily, the worst events are, in decreasing order of cost:
 
@@ -254,6 +259,26 @@ moneyEvents <- ddply (storms,
 ```
 
 Summed this way, total casualties were `r sum (humanEvents$human)` and costs were `r sum (moneyEvents$money)`.
+
+In detail, here are casualty counts broken down by weather event type:
+
+```{r echo=TRUE, fig.width=5, fig.height=8}
+humanOrder <- order (humanEvents$human)
+beepy <- barplot (humanEvents$human[humanOrder],
+                  horiz=TRUE,
+                  col='yellow',
+                  xlab='Total casualties (injuries plus deaths)',
+                  ylab='Event type')
+text (cex=0.8,
+      y=beepy - 0,
+      x=-1.25,
+      as.character (humanEvents$official[humanOrder]),
+      xpd=TRUE,
+      srt=0,
+      adj=0,
+      col='blue')
+```
+
 
 ```{r echo=TRUE, fig.width=5, fig.height=8}
 moneyOrder <- order (moneyEvents$money)
