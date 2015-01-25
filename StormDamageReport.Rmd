@@ -207,4 +207,11 @@ storms$official <- toOfficial[storms$EVTYPE]
 
 The regular expression trick converted `r 100.0 * (1.0 - sum (is.na (storms$official)) / nrow (storms))` percent of the raw events.
 
+## Data processing summary
+
+From the raw data we have generated three new useful variables:
+ - `official`, the NOAA classification of each event;
+ - `money`, the monetary cost of each event; and
+ - `human`, the number of casualties from each event.
+
 # Results
