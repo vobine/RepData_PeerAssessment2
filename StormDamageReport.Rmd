@@ -220,15 +220,16 @@ From the processed data we compute total costs for each official type of event.
 
 ```{r echo=TRUE, cache=TRUE}
 library (plyr)
-moneyEvents <- ddply (storms, 
-                      .(official), 
-                      summarize, 
-                      money=sum (money, na.rm=TRUE))
 
 humanEvents <- ddply (storms,
                       .(official),
                       summarize,
                       human=sum (human, na.rm=TRUE))
+
+moneyEvents <- ddply (storms, 
+                      .(official), 
+                      summarize, 
+                      money=sum (money, na.rm=TRUE))
 ```
 
 Summed this way, total casualties were `r sum (humanEvents$human)` and costs were `r sum (moneyEvents$money)`.
