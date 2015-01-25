@@ -1,5 +1,5 @@
 ---
-title: "Storm Damage Report"
+title: "Weather Damage by Event Type"
 author: "Hal Peterson"
 date: "January 24, 2015"
 output: html_document
@@ -7,7 +7,21 @@ output: html_document
 
 # Synopsis
 
+We investigate the effects of 48 types of weather event, both in human terms (injuries and deaths) and monetary (crops and other economic losses).
+We seek to identify the most dangerous classes of weather event.
 
+In human costs, the worst events are, in decreasing order of injuries and deaths:
+
+1. Something
+
+Monetarily, the worst events are, in decreasing order of cost:
+
+1. High Wind
+1. Tornado
+1. Flash Flood
+1. Flood
+1. Hail
+1. Lightning
 
 # Data Processing
 
