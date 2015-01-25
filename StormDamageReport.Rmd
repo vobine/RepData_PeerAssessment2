@@ -11,14 +11,28 @@ output: html_document
 
 # Data Processing
 
+Acquire data, load into R, and prepare it for analysis.
+
 ## Load data set
 
 ```{r cache=TRUE}
 storms <- read.csv ('StormData.csv.bz2')
 ```
 
-Convert damage exponents to numeric values.
-For the first step we ignore R warnings, because we expect them: not every EXP level is a string representing a number.
+Compute human harm as injuries plus fatalities.
+
+```{r cache=TRUE}
+storms$human <- storms$FATALITIES + storms$INJURIES
+human <- sum (storms$human)
+```
+
+Total human harm over all reported storms is `r human` people.
+
+## Convert monetary values
+
+Monetary damage estimates are stored in two columns, a significand and an exponent. The exponent can be numeric or a letter (e.g., 'k' for kilo, etc.).
+For analysis we must convert damage exponents to numeric values.
+(For the first step we ignore R warnings, because we expect them: not every EXP level is a string representing a number.)
 
 ```{r warning=FALSE}
 allExponents <- union (levels (storms$CROPDMGEXP),
@@ -34,8 +48,8 @@ numex[allExponents %in% c('', '?', '-', '+')] <- 0
 numex <- 10 ^ numex
 ```
 
-Do not trust the enumeration conversion: complain bitterly if it missed any *EXP codes.
-Otherwise, display the values (because it doesn't hurt).
+Complain if enumeration conversion missed any *EXP codes.
+Otherwise, display exponent values (because it doesn't hurt).
 
 ```{r}
 if (any (is.na (numex))) {
@@ -45,6 +59,16 @@ if (any (is.na (numex))) {
   unique (numex)
 }
 ```
+
+Now we have the tools to compute monetary damage estimates.
+
+```{r cache=TRUE}
+storms$money <- storms$PROPDMG * numex[storms$PROPDMGEXP] +
+  storms$CROPDMG * numex[storms$CROPDMGEXP]
+money <- sum (storms$money)
+```
+
+Total reported monetary damage is `r money`.
 
 ## Clean up event types
 

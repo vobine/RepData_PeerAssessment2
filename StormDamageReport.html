@@ -73,10 +73,18 @@ img {
 </div>
 <div id="data-processing" class="section level1">
 <h1>Data Processing</h1>
+<p>Acquire data, load into R, and prepare it for analysis.</p>
 <div id="load-data-set" class="section level2">
 <h2>Load data set</h2>
 <pre class="r"><code>storms &lt;- read.csv ('StormData.csv.bz2')</code></pre>
-<p>Convert damage exponents to numeric values. For the first step we ignore R warnings, because we expect them: not every EXP level is a string representing a number.</p>
+<p>Compute human harm as injuries plus fatalities.</p>
+<pre class="r"><code>storms$human &lt;- storms$FATALITIES + storms$INJURIES
+human &lt;- sum (storms$human)</code></pre>
+<p>Total human harm over all reported storms is 1.5567310^{5} people.</p>
+</div>
+<div id="convert-monetary-values" class="section level2">
+<h2>Convert monetary values</h2>
+<p>Monetary damage estimates are stored in two columns, a significand and an exponent. The exponent can be numeric or a letter (e.g., ‘k’ for kilo, etc.). For analysis we must convert damage exponents to numeric values. (For the first step we ignore R warnings, because we expect them: not every EXP level is a string representing a number.)</p>
 <pre class="r"><code>allExponents &lt;- union (levels (storms$CROPDMGEXP),
                        levels (storms$PROPDMGEXP))
 numex &lt;- as.numeric (allExponents)</code></pre>
@@ -86,7 +94,7 @@ numex[allExponents %in% c('m', 'M')] &lt;- 6
 numex[allExponents %in% c('b', 'B')] &lt;- 9
 numex[allExponents %in% c('', '?', '-', '+')] &lt;- 0
 numex &lt;- 10 ^ numex</code></pre>
-<p>Do not trust the enumeration conversion: complain bitterly if it missed any *EXP codes. Otherwise, display the values (because it doesn’t hurt).</p>
+<p>Complain if enumeration conversion missed any *EXP codes. Otherwise, display exponent values (because it doesn’t hurt).</p>
 <pre class="r"><code>if (any (is.na (numex))) {
   print (allExponents[is.na (numex)])
   stop ('INPUT ERROR: unknown values of CROPDMGEXP and/or PROPDMGEXP')
@@ -94,6 +102,11 @@ numex &lt;- 10 ^ numex</code></pre>
   unique (numex)
 }</code></pre>
 <pre><code>##  [1] 1e+00 1e+02 1e+09 1e+03 1e+06 1e+01 1e+04 1e+05 1e+07 1e+08</code></pre>
+<p>Now we have the tools to compute monetary damage estimates.</p>
+<pre class="r"><code>storms$money &lt;- storms$PROPDMG * numex[storms$PROPDMGEXP] +
+  storms$CROPDMG * numex[storms$CROPDMGEXP]
+money &lt;- sum (storms$money)</code></pre>
+<p>Total reported monetary damage is 1.145142910^{14}.</p>
 </div>
 <div id="clean-up-event-types" class="section level2">
 <h2>Clean up event types</h2>
