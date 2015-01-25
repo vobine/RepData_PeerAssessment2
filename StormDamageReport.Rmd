@@ -260,13 +260,14 @@ moneyEvents <- ddply (storms,
 
 Summed this way, total casualties were `r sum (humanEvents$human)` and costs were `r sum (moneyEvents$money)`.
 
-In detail, here are casualty counts broken down by weather event type:
+In detail, here are casualty counts broken down by weather event type. For each event we show the total number of killed and wounded:
 
 ```{r echo=TRUE, fig.width=5, fig.height=8}
 humanOrder <- order (humanEvents$human)
 beepy <- barplot (humanEvents$human[humanOrder],
                   horiz=TRUE,
                   col='yellow',
+                  main='Casualties from weather events',
                   xlab='Total casualties (injuries plus deaths)',
                   ylab='Event type')
 text (cex=0.8,
@@ -283,11 +284,14 @@ worst <- tail (humanOrder, 1)
 
 Tornadoes are clearly the greatest weather threat to humans, accounting for `r humanEvents$human[worst] * 100.0 / sum (humanEvents$human, na.rm=TRUE)` percent of total casualties.
 
+For monetary costs, we show the total of crop damage and other economic harm, again by event category.
+
 ```{r echo=TRUE, fig.width=5, fig.height=8}
 moneyOrder <- order (moneyEvents$money)
 beepy <- barplot (moneyEvents$money[moneyOrder],
                   horiz=TRUE,
                   col='yellow',
+                  main='Monetary damage from weather events',
                   xlab='Total cost (nominal dollars)',
                   ylab='Event type')
 text (cex=0.8,
