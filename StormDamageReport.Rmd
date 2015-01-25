@@ -232,3 +232,10 @@ humanEvents <- ddply (storms,
 ```
 
 Summed this way, total casualties were `r sum (humanEvents$human)` and costs were `r sum (moneyEvents$money)`.
+
+```{r echo=TRUE, fig.width=5, fig.height=8}
+moneyOrder <- order (moneyEvents$money)
+barplot (moneyEvents$money[moneyOrder],
+         horiz=TRUE)
+```
+
